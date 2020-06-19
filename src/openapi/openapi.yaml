@@ -1,0 +1,48 @@
+openapi: 3.0.0
+info:
+  title: LoCoCom Backend Server
+  description: This is a simple API
+  contact:
+    email: svladov.dev@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: http://localhost:4000/
+  description: Local
+paths:
+  /auth/login:
+    post:
+      summary: logs in a user
+      description: logs in a user to the system
+      operationId: loginUser
+      requestBody:
+        description: logs in a user to the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "201":
+          description: user logged in
+        "400":
+          description: user log in failed
+components:
+  schemas:
+    User:
+      required:
+      - username
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+          example: stefko3z
+        password:
+          type: string
+          format: password
+          example: iLoveSebaMaster2020
+      example:
+        username: stefko3z
+        password: iLoveSebaMaster2020

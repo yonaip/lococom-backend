@@ -2,31 +2,35 @@
 
 const express = require('express')
 const helmet = require('helmet')
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+const bodyParser = require('body-parser');
+const swaggerRouter = require('./routes/swagger');
 
 const auth = require('./routes/auth');
 
 const app = express()
 
-// Swagger configuration
-const swaggerOptions = {
-    swaggerDefinition: {
-        info: {
-            title: 'Root Api',
-            description: 'Root api for LoCoCom backend, doesn\'t really do anything.'
-        },
-        servers: ["http://localhost:4000"]
-    },
-    // [./routes/*.js]
-    apis: ["./src/app.js"]
-};
+// // Swagger configuration
+// const swaggerOptions = {
+//     swaggerDefinition: {
+//         info: {
+//             title: 'Root Api',
+//             description: 'Root api for LoCoCom backend, doesn\'t really do anything.'
+//         },
+//         servers: ["http://localhost:4000"]
+//     },
+//     // [./src/routes/*.js]
+//     apis: ["./src/app.js", "./src/routes/*.js"]
+// };
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+// const swaggerDocs = swaggerJsDoc(swaggerOptions);
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+app.use('/docs', swaggerRouter);
 
 // Middleware setup
 app.use(helmet());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Basic route
 /**
