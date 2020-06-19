@@ -1,13 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-router.post('/login', function(req, res, next) {
-  res.send('Login TODO');
-});
+const authController = require('../controllers/auth');
+const middlewares = require('../middlewares');
 
-router.post('/register', function(req, res, next) {
-  res.send('Register TODO');
-});
+router.post('/login', authController.login);
+
+router.post('/register', authController.register);
 
 router.get('/me', function(req, res, next) {
   res.send('Me TODO');

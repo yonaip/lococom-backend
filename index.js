@@ -13,7 +13,7 @@ app.set('port', config.port);
 const server = http.createServer(app);
 
 // Connect to MongoDB database, probably running in docker container
-mongoose.connect(config.mongoURI)
+mongoose.connect(config.mongoURI, { useNewUrlParser: true })
     .then(() => server.listen(config.port))
     .catch(err => {
         console.log('Error connecting to the database', err.message);

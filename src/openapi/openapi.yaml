@@ -14,7 +14,7 @@ servers:
 paths:
   /auth/login:
     post:
-      summary: logs in a user
+      summary: Logs in a user
       description: logs in a user to the system
       operationId: loginUser
       requestBody:
@@ -22,15 +22,36 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UserLogin'
       responses:
-        "201":
-          description: user logged in
+        "200":
+          description: User login successful!
         "400":
-          description: user log in failed
+          description: 'The request body must contain a username/password property'
+  /auth/register:
+    post:
+      summary: Registers a user
+      description: registers a user in the system
+      operationId: registerUser
+      requestBody:
+        description: registers a user in the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        "200":
+          description: User registration successful!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonWebToken'
+        "400":
+          description: 'The request body must contain a username/password property'
+
 components:
   schemas:
-    User:
+    UserLogin:
       required:
       - username
       - password
@@ -46,3 +67,28 @@ components:
       example:
         username: stefko3z
         password: iLoveSebaMaster2020
+    UserRegister:
+      required:
+      - username
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+          example: stefko3z
+        password:
+          type: string
+          format: password
+          example: iLoveSebaMaster2020
+      example:
+        username: stefko3z
+        password: iLoveSebaMaster2020
+    JsonWebToken:
+      required:
+        - token
+      type: object
+      properties:
+        token:
+          type: string
+          format: token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZWQ0YzUzNmFlNTc0DON'T COPY THIS IS A SAMPLEuYW1lIjoic3RlZmtvM3oiLCJpYXQiOjE1OTI2MDk4NzUsImV4cCI6MTU5MjY5NjI3NX0.be6sa2A310n
