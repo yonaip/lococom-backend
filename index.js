@@ -10,7 +10,15 @@ const config = require('./src/config');
 app.set('port', config.port);
 
 // Create server
-const server = http.createServer(app).listen(config.port);
+const server = http.createServer(app);
+
+// Connect to MongoDB database, probably running in docker container
+mongoose.connect(config.mongoURI)
+    .then(() => server.listen(config.port))
+    .catch(err => {
+        console.log('Error connecting to the database', err.message);
+        process.exit(err.statusCode);
+    })
 
 server.on('listening', () => {
     console.log(`API is running on port ${config.port}`);
