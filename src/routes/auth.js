@@ -8,12 +8,8 @@ router.post('/login', authController.login);
 
 router.post('/register', authController.register);
 
-router.get('/me', function(req, res, next) {
-  res.send('Me TODO');
-});
+router.get('/me', middlewares.checkAuthentication, authController.me);
 
-router.get('/logout', function(req, res, next) {
-  res.send('Logout TODO');
-});
+router.get('/logout', middlewares.checkAuthentication, authController.logout);
 
 module.exports = router;

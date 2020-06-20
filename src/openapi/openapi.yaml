@@ -11,6 +11,16 @@ info:
 servers:
 - url: http://localhost:4000/
   description: Local
+# 1) Define the security scheme type (HTTP bearer)
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+# 2) Apply the security globally to all operations
+security:
+  - bearerAuth: []         # use the same name as above
 paths:
   /auth/login:
     post:
@@ -39,6 +49,31 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserRegister'
+      responses:
+        "200":
+          description: User registration successful!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonWebToken'
+        "400":
+          description: 'The request body must contain a username/password property'
+  /auth/me:
+    post:
+      summary: Returns a user
+      description: returns a from the system
+      operationId: meUser
+      # headers:
+      #   Authorization:
+      #     description: Contains the jwt token needed for authorization
+      #     schema:
+      #       type: string
+      requestBody:
+        description: returns a from the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserMe'
       responses:
         "200":
           description: User registration successful!
@@ -83,6 +118,16 @@ components:
       example:
         username: stefko3z
         password: iLoveSebaMaster2020
+    UserMe:
+      required:
+      - userId
+      type: object
+      properties:
+        userId:
+          type: string
+          example: stefko3z
+      example:
+        userId: stefko3z
     JsonWebToken:
       required:
         - token
