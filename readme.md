@@ -6,6 +6,6 @@
 
 2. run ```npm install```
 
-3. then run ```npm run devstart```
+3. then run ```npm run devstart```. If connection failure with MongoDb use host.docker.internal instead
 
 4. To stop mongodb run ```docker-compose down```.
