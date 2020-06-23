@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: LoCoCom Backend Server
+  description: This is a simple API
+  contact:
+    email: svladov.dev@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: http://localhost:4000/
+  description: Local
+# 1) Define the security scheme type (HTTP bearer)
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+# 2) Apply the security globally to all operations
+security:
+  - bearerAuth: []         # use the same name as above
+paths:
+  /auth/login:
+    post:
+      summary: Logs in a user
+      description: logs in a user to the system
+      operationId: loginUser
+      requestBody:
+        description: logs in a user to the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        "200":
+          description: User login successful!
+        "400":
+          description: 'The request body must contain a username/password property'
+  /auth/register:
+    post:
+      summary: Registers a user
+      description: registers a user in the system
+      operationId: registerUser
+      requestBody:
+        description: registers a user in the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+      responses:
+        "200":
+          description: User registration successful!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonWebToken'
+        "400":
+          description: 'The request body must contain a username/password property'
+  /auth/me:
+    post:
+      summary: Returns a user
+      description: returns a from the system
+      operationId: meUser
+      # headers:
+      #   Authorization:
+      #     description: Contains the jwt token needed for authorization
+      #     schema:
+      #       type: string
+      requestBody:
+        description: returns a from the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserMe'
+      responses:
+        "200":
+          description: User registration successful!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonWebToken'
+        "400":
+          description: 'The request body must contain a username/password property'
+
+components:
+  schemas:
+    UserLogin:
+      required:
+      - username
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+          example: stefko3z
+        password:
+          type: string
+          format: password
+          example: iLoveSebaMaster2020
+      example:
+        username: stefko3z
+        password: iLoveSebaMaster2020
+    UserRegister:
+      required:
+      - username
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+          example: stefko3z
+        password:
+          type: string
+          format: password
+          example: iLoveSebaMaster2020
+      example:
+        username: stefko3z
+        password: iLoveSebaMaster2020
+    UserMe:
+      required:
+      - userId
+      type: object
+      properties:
+        userId:
+          type: string
+          example: stefko3z
+      example:
+        userId: stefko3z
+    JsonWebToken:
+      required:
+        - token
+      type: object
+      properties:
+        token:
+          type: string
+          format: token
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZWQ0YzUzNmFlNTc0DON'T COPY THIS IS A SAMPLEuYW1lIjoic3RlZmtvM3oiLCJpYXQiOjE1OTI2MDk4NzUsImV4cCI6MTU5MjY5NjI3NX0.be6sa2A310n
