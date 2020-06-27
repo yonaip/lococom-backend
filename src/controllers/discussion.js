@@ -20,10 +20,23 @@ const create = async (req,res) => {
  }
  const getDiscussion = async (req,res) => {
   
-    let discussion = await DiscussionModel.find({}).sort({_id:-1}).limit(1).exec();
-    res.send(discussion);
+    try {
+      let discussion = await DiscussionModel.find({}).sort({_id:-1}).limit(1).exec();
+      if (discussion.length === 0) return res.status(404).json({
+          error: 'Not Found',
+          message: `Discussion not found`
+      });
 
- }
+      return res.send(discussion);
+
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
+ 
  
 
 

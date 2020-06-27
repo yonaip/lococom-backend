@@ -8,6 +8,7 @@ const swaggerRouter = require('./routes/swagger');
 const auth = require('./routes/auth');
 const middlewares = require('./middlewares');
 const discussion = require('./routes/discussion');
+const comment = require('./routes/comment');
 const app = express()
 
 // Middleware setup
@@ -26,4 +27,5 @@ app.get('/', (req, res) => {
 app.use('/auth', auth);
 app.use('/docs', swaggerRouter);
 app.use('/discussion', discussion);
+app.use('/comment', comment);
 module.exports = app;
