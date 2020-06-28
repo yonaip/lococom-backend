@@ -26,6 +26,6 @@ app.get('/', (req, res) => {
 // API routes
 app.use('/auth', auth);
 app.use('/docs', swaggerRouter);
-app.use('/discussion', discussion);
-app.use('/comment', comment);
+app.use('/api', discussion);
+app.use('/api', comment);
 module.exports = app;
