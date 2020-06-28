@@ -19,11 +19,11 @@ const DiscussionSchema = new mongoose.Schema({
         type: String,
         required: true, 
     },
-    lng: {
+    lat: {
         type: Number,
         required: true,
     },
-    lat: {
+    lng: {
         type: Number,
         required: true,
     }
