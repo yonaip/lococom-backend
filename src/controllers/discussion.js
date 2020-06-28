@@ -9,7 +9,6 @@ const DiscussionModel = require('../models/discussion');
 const createDiscussion = async (req,res) => {
   var newDiscussion = new DiscussionModel(req.body);
 
-  console.log(new DiscussionModel(req.body));
   newDiscussion.save()
     .then(item => {
       res.send(item);
