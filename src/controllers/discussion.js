@@ -21,10 +21,10 @@ const createDiscussion = async (req,res) => {
 
 const getDiscussion = async (req,res) => {
   try {
-    let discussion = await DiscussionModel.find({}).sort({_id:-1}).limit(1).exec();
-    if (discussion.length === 0) return res.status(404).json({
+    let discussion = await DiscussionModel.findById(req.params.id).exec();
+    if (!discussion) return res.status(404).json({
         error: 'Not Found',
-        message: `Discussion not found`
+        message: `Discussion ${req.params.id} not found`
     });
 
     return res.send(discussion);
