@@ -15,7 +15,7 @@ const createDiscussion = async (req,res) => {
       res.send(item);
     })
     .catch(err => {
-      res.status(400).send("unable to save discussion to database");
+      res.status(400).send(`Could not create ${newDiscussion} due to ${err}`);
     });
  }
 
