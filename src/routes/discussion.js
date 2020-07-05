@@ -6,4 +6,7 @@ const discussionController = require('../controllers/discussion');
 // create Discussion Route
 router.post('/discussion', discussionController.createDiscussion);
 router.get('/discussion/:id', discussionController.getDiscussion);
+router.put('/discussion/upvote/:id', discussionController.upvote);
+router.put('/discussion/downvote/:id', discussionController.downvote);
+
 module.exports = router;

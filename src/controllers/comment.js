@@ -16,14 +16,6 @@ const createComment = async (req,res) => {
       res.status(400).send(`Could not create ${newComment} due to ${err}`);
     });
  }
- /*const getComment = async (req,res) => {
-  console.log (req);
-  let ID = req.body.id;
-  
-  let comment = await CommentModel.find({ discussionId : ID }).limit(1).exec();
-
-  return res.status(200).json(comment);
-}*/
 
 const getComments = async (req,res) => {
  try {
@@ -43,7 +35,41 @@ const getComments = async (req,res) => {
  
 }
     
+const upvote = async(req,res) => {
 
+  try {
+    const comment = await CommentModel.findById(req.params.id).exec();
+    if (!comment) return res.status(404).json({
+        error: 'Not Found',
+        message: `Discussion ${req.params.id} not found`
+    });
+    await CommentModel.updateOne({_id:req.params.id}, {$inc: {votes : 1}} )
+    return res.send(comment);
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
+
+const downvote = async(req,res) => {
+
+  try {
+    const comment = await CommentModel.findById(req.params.id).exec();
+    if (!comment) return res.status(404).json({
+        error: 'Not Found',
+        message: `Discussion ${req.params.id} not found`
+    });
+    await CommentModel.updateOne({_id:req.params.id}, {$inc: {votes : -1}} )
+    return res.send(comment);
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
  
  
 
@@ -52,6 +78,8 @@ const getComments = async (req,res) => {
 
 module.exports = {
     createComment,
-    getComments
+    getComments,
+    upvote,
+    downvote
     
 };

@@ -19,6 +19,10 @@ const DiscussionSchema = new mongoose.Schema({
         type: String,
         required: true, 
     },
+    votes: {
+        type: Number,
+        required:true,
+    },
     lat: {
         type: Number,
         required: true,

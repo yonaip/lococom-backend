@@ -34,8 +34,45 @@ const getDiscussion = async (req,res) => {
       });
   }
 }
- 
+
+const upvote = async(req,res) => {
+
+  try {
+    const discussion = await DiscussionModel.findById(req.params.id).exec();
+    if (!discussion) return res.status(404).json({
+        error: 'Not Found',
+        message: `Discussion ${req.params.id} not found`
+    });
+    await DiscussionModel.updateOne({_id:req.params.id}, {$inc: {votes : 1}} )
+    return res.send(discussion);
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
+
+const downvote = async(req,res) => {
+
+  try {
+    const discussion = await DiscussionModel.findById(req.params.id).exec();
+    if (!discussion) return res.status(404).json({
+        error: 'Not Found',
+        message: `Discussion ${req.params.id} not found`
+    });
+    await DiscussionModel.updateOne({_id:req.params.id}, {$inc: {votes : -1}} )
+    return res.send(discussion);
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
 module.exports = {
     createDiscussion,
-    getDiscussion
+    getDiscussion,
+    upvote,
+    downvote
 };
