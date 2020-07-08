@@ -35,6 +35,24 @@ const getDiscussion = async (req,res) => {
   }
 }
 
+/** Gets all discussion
+ *  TODO: refactor to use query parameters to limit search radius
+ *  important for very big collections
+ * @param {*} req 
+ * @param {*} res 
+ */
+const getAllDiscussions = async (req,res) => {
+  try {
+    const discussions = await DiscussionModel.find().exec();
+    return res.send(discussions);
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
+
 const upvote = async(req,res) => {
 
   try {
@@ -73,6 +91,7 @@ const downvote = async(req,res) => {
 module.exports = {
     createDiscussion,
     getDiscussion,
+    getAllDiscussions,
     upvote,
     downvote
 };
