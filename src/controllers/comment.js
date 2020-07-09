@@ -71,7 +71,23 @@ const downvote = async(req,res) => {
   }
 }
  
- 
+const getCommentProfile = async (req,res) => {
+  try {
+    const comments = await CommentModel.find({username: req.params.id}).exec();
+    
+    if (!comments) return res.status(404).json({
+        error: 'Not Found',
+        message: `Comments for User ${req.params.id} not found`
+    });
+
+    return res.send(comments);
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
 
 
 
@@ -80,6 +96,7 @@ module.exports = {
     createComment,
     getComments,
     upvote,
-    downvote
+    downvote,
+    getCommentProfile
     
 };
