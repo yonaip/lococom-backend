@@ -106,11 +106,13 @@ const downvote = async(req,res) => {
       });
   }
 }
+
 module.exports = {
     createDiscussion,
     getDiscussion,
     getAllDiscussions,
     upvote,
     downvote,
-    getDiscussionProfile
+    getDiscussionProfile,
+    
 };

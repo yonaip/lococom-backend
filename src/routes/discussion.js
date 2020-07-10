@@ -11,4 +11,5 @@ router.put('/discussion/upvote/:id', discussionController.upvote);
 router.put('/discussion/downvote/:id', discussionController.downvote);
 router.get('/discussion/getDiscussionProfile/:id', discussionController.getDiscussionProfile);
 
+
 module.exports = router;
