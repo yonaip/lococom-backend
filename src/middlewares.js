@@ -44,7 +44,6 @@ const checkAuthentication = (req, res, next) => {
         next();
     });
 
-
 };
 
 const errorHandler = (err, req, res, next) => {

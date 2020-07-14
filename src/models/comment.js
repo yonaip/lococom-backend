@@ -11,6 +11,10 @@ const CommentSchema = new mongoose.Schema({
         type: String,
         required: true, 
     },
+    votes: {
+        type: Number,
+        required: true,
+    },
     discussionId: {
         type: String,
         required: true,

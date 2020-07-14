@@ -4,6 +4,10 @@ var router = express.Router();
 const commentController = require('../controllers/comment');
 
 // create Comment Route
-router.post('/createComment', commentController.create);
-router.post('/getComment', commentController.getComment); // we can only send a body with a post request?
+router.post('/comment', commentController.createComment);
+router.get('/comment/:id', commentController.getComments);
+router.put('/comment/upvote/:id', commentController.upvote);
+router.put('/comment/downvote/:id', commentController.downvote);
+router.get('/comment/getCommentProfile/:id', commentController.getCommentProfile);
+
 module.exports = router;
