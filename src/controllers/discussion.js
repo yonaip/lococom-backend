@@ -114,5 +114,4 @@ module.exports = {
     upvote,
     downvote,
     getDiscussionProfile,
-    
 };

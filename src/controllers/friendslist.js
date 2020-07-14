@@ -36,9 +36,6 @@ const createFriendslist = async (req,res) => {
    
 }
 
-  
-        
-
 const getFriendslist = async (req,res) => {
     try {
         const friends = await FriendsListmodel.findOne({username:req.params.id}).exec();
@@ -56,9 +53,6 @@ const getFriendslist = async (req,res) => {
           });
       }
     }
-
-    
-
 
 module.exports = {
     getFriendslist,

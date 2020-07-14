@@ -98,5 +98,4 @@ module.exports = {
     upvote,
     downvote,
     getCommentProfile
-    
 };
