@@ -3,9 +3,8 @@
 const mongoose = require('mongoose');
 
 const DiscussionSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true
+    creatorId: { 
+        type: mongoose.Schema.Types.ObjectId, ref: 'User' 
     },
     title: {
         type: String,

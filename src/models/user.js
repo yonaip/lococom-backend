@@ -14,7 +14,8 @@ const UserSchema = new mongoose.Schema({
     }, 
     email: {
         type: String
-    }
+    },
+    discussions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }]
 });
 
 UserSchema.set('versionKey', false);

@@ -89,9 +89,6 @@ const getCommentProfile = async (req,res) => {
   }
 }
 
-
-
-
 module.exports = {
     createComment,
     getComments,

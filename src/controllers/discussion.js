@@ -5,17 +5,25 @@ const bcrypt = require('bcryptjs');
 
 const config = require('../config');
 const DiscussionModel = require('../models/discussion');
+const UserModel = require("../models/user");
 
 const createDiscussion = async (req,res) => {
-  const newDiscussion = new DiscussionModel(req.body);
-
-  newDiscussion.save()
-    .then(item => {
-      res.send(item);
-    })
-    .catch(err => {
-      res.status(400).send(`Could not create ${newDiscussion} due to ${err}`);
+  // Set the creatorId
+  req.body.creatorId = req.userId;
+  
+  try {
+    const newDiscussion = await new DiscussionModel(req.body).save();
+    
+    await UserModel.updateOne({ _id: req.userId }, {
+      $push: {discussions: newDiscussion._id }
     });
+
+    res.send(newDiscussion);
+
+  } catch(err) {
+    res.status(400).send(`Could not create ${newDiscussion} due to ${err}`);
+  }
+     
 }
 
 const getDiscussion = async (req,res) => {
