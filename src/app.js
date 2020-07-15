@@ -10,6 +10,7 @@ const middlewares = require('./middlewares');
 const discussion = require('./routes/discussion');
 const comment = require('./routes/comment');
 const friendlist = require('./routes/friendlist');
+const notification = require('./routes/notification');
 const app = express()
 
 // Middleware setup
@@ -30,4 +31,5 @@ app.use('/docs', swaggerRouter);
 app.use('/api', discussion);
 app.use('/api', comment);
 app.use('/api', friendlist);
+app.use('/api', notification)
 module.exports = app;

@@ -1,7 +1,25 @@
 "use strict";
 
-const DiscussionModel = require('../models/discussion');
+const NotificationModel = require('../models/notification');
 const UserModel = require("../models/user");
+
+/** Returns all notifications
+ *  TODO: possibly add query params
+ * @param {*} req 
+ * @param {*} res 
+ */
+const getNotifications = async (req,res) => {
+    try {
+      const notifications = await NotificationModel.find({userId: req.userId}).exec();
+
+      return res.send(notifications);
+    } catch(err) {
+        return res.status(500).json({
+            error: 'Internal Server Error',
+            message: err.message
+        });
+    }
+  }
 
 const createDiscussion = async (req,res) => {
   // Set the creatorId
@@ -22,23 +40,6 @@ const createDiscussion = async (req,res) => {
      
 }
 
-const getDiscussion = async (req,res) => {
-  try {
-    const discussion = await DiscussionModel.findById(req.params.id).exec();
-    
-    if (!discussion) return res.status(404).json({
-        error: 'Not Found',
-        message: `Discussion ${req.params.id} not found`
-    });
-
-    return res.send(discussion);
-  } catch(err) {
-      return res.status(500).json({
-          error: 'Internal Server Error',
-          message: err.message
-      });
-  }
-}
 const getDiscussionProfile = async (req,res) => {
   try {
     const discussions = await DiscussionModel.find({username: req.params.id}).exec();
@@ -112,10 +113,5 @@ const downvote = async(req,res) => {
 }
 
 module.exports = {
-    createDiscussion,
-    getDiscussion,
-    getAllDiscussions,
-    upvote,
-    downvote,
-    getDiscussionProfile,
+    getNotifications
 };
