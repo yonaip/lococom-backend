@@ -3,6 +3,27 @@
 const NotificationModel = require('../models/notification');
 const UserModel = require("../models/user");
 
+/** Creates a notification for a user, it's not bound to an endpoint as notifications are created internally
+ * 
+ * @param {*} userId 
+ * @param {*} type
+ * @param {*} message
+ * @param {*} read
+ */
+const createNotification = async (userId, type, message, read) => {
+  try {
+    const newNotification = await new NotificationModel({
+      userId: userId,
+      type: type,
+      message: message,
+      read: read
+    }).save();
+    
+  } catch(err) {
+    res.status(400).send(`Could not create notification due to ${err}`);
+  }   
+}
+
 /** Returns all notifications
  *  TODO: possibly add query params
  * @param {*} req 
@@ -20,25 +41,6 @@ const getNotifications = async (req,res) => {
         });
     }
   }
-
-const createDiscussion = async (req,res) => {
-  // Set the creatorId
-  req.body.creatorId = req.userId;
-  
-  try {
-    const newDiscussion = await new DiscussionModel(req.body).save();
-    
-    await UserModel.updateOne({ _id: req.userId }, {
-      $push: {discussions: newDiscussion._id }
-    });
-
-    res.send(newDiscussion);
-
-  } catch(err) {
-    res.status(400).send(`Could not create ${newDiscussion} due to ${err}`);
-  }
-     
-}
 
 const getDiscussionProfile = async (req,res) => {
   try {
@@ -113,5 +115,6 @@ const downvote = async(req,res) => {
 }
 
 module.exports = {
+    createNotification,
     getNotifications
 };

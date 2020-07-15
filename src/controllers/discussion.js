@@ -2,7 +2,7 @@
 
 const DiscussionModel = require('../models/discussion');
 const UserModel = require("../models/user");
-const { param } = require('../routes/auth');
+const NotificationController = require('./notification');
 
 const getDiscussion = async (req,res) => {
   try {
@@ -65,7 +65,7 @@ const createDiscussion = async (req,res) => {
 }
 
 /** Upvotes a discussion, idempotent
- * 
+ *  Sends a notification to the creator of the discussion
  * @param {*} req 
  * @param {*} res 
  */
@@ -96,6 +96,12 @@ const upvoteDiscussion = async(req,res) => {
 
     discussion.upvoters = upvoters;
     discussion.downvoters = downvoters;
+
+    // if number of likes has increased send a notification
+    if(discussion.votes != votes && votes > 0) {
+      NotificationController.createNotification(req.userId, "disc_upvote", `"${discussion.title}" now has ${votes} votes!`);
+    }
+
     discussion.votes = votes;
 
     return res.send(discussion);
@@ -108,7 +114,7 @@ const upvoteDiscussion = async(req,res) => {
 }
 
 /** Downvotes a discussion, idempotent
- * 
+ *  DOES NOT send a notification to the creator of the discussion, to not make him sad :(
  * @param {*} req 
  * @param {*} res 
  */
