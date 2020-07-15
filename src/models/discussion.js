@@ -6,6 +6,14 @@ const DiscussionSchema = new mongoose.Schema({
     creatorId: { 
         type: mongoose.Schema.Types.ObjectId, ref: 'User' 
     },
+    lat: {
+        type: Number,
+        required: true,
+    },
+    lng: {
+        type: Number,
+        required: true,
+    },
     title: {
         type: String,
         required: true,
@@ -22,14 +30,8 @@ const DiscussionSchema = new mongoose.Schema({
         type: Number,
         required:true,
     },
-    lat: {
-        type: Number,
-        required: true,
-    },
-    lng: {
-        type: Number,
-        required: true,
-    }
+    upvoters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    downvoters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 DiscussionSchema.set('versionKey', false);

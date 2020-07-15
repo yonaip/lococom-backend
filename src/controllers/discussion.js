@@ -2,25 +2,7 @@
 
 const DiscussionModel = require('../models/discussion');
 const UserModel = require("../models/user");
-
-const createDiscussion = async (req,res) => {
-  // Set the creatorId
-  req.body.creatorId = req.userId;
-  
-  try {
-    const newDiscussion = await new DiscussionModel(req.body).save();
-    
-    await UserModel.updateOne({ _id: req.userId }, {
-      $push: {discussions: newDiscussion._id }
-    });
-
-    res.send(newDiscussion);
-
-  } catch(err) {
-    res.status(400).send(`Could not create ${newDiscussion} due to ${err}`);
-  }
-     
-}
+const { param } = require('../routes/auth');
 
 const getDiscussion = async (req,res) => {
   try {
@@ -32,23 +14,6 @@ const getDiscussion = async (req,res) => {
     });
 
     return res.send(discussion);
-  } catch(err) {
-      return res.status(500).json({
-          error: 'Internal Server Error',
-          message: err.message
-      });
-  }
-}
-const getDiscussionProfile = async (req,res) => {
-  try {
-    const discussions = await DiscussionModel.find({username: req.params.id}).exec();
-    
-    if (!discussions) return res.status(404).json({
-        error: 'Not Found',
-        message: `Discussions for User ${req.params.id} not found`
-    });
-
-    return res.send(discussions);
   } catch(err) {
       return res.status(500).json({
           error: 'Internal Server Error',
@@ -75,15 +40,64 @@ const getAllDiscussions = async (req,res) => {
   }
 }
 
-const upvote = async(req,res) => {
+/** Creates a discussion
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+const createDiscussion = async (req,res) => {
+  // Set the creatorId
+  req.body.creatorId = req.userId;
+  
+  try {
+    const newDiscussion = await new DiscussionModel(req.body).save();
+    
+    await UserModel.updateOne({ _id: req.userId }, {
+      $push: {discussions: newDiscussion._id }
+    });
 
+    res.send(newDiscussion);
+
+  } catch(err) {
+    res.status(400).send(`Could not create ${newDiscussion} due to ${err}`);
+  }
+     
+}
+
+/** Upvotes a discussion, idempotent
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+const upvoteDiscussion = async(req,res) => {
   try {
     const discussion = await DiscussionModel.findById(req.params.id).exec();
     if (!discussion) return res.status(404).json({
         error: 'Not Found',
         message: `Discussion ${req.params.id} not found`
     });
-    await DiscussionModel.updateOne({_id:req.params.id}, {$inc: {votes : 1}} )
+
+    let upvoters = discussion.upvoters;
+    let downvoters = discussion.downvoters;
+
+    if(!upvoters.includes(req.userId)) {
+      upvoters.push(req.userId);
+    }
+    if(downvoters.includes(req.userId)) {
+      downvoters = downvoters.filter(userId => userId != req.userId)
+    }
+    const votes = upvoters.length - downvoters.length;
+
+    await DiscussionModel.updateOne({_id: req.params.id}, {$set: {
+      votes : votes,
+      upvoters: upvoters,
+      downvoters: downvoters 
+    }});
+
+    discussion.upvoters = upvoters;
+    discussion.downvoters = downvoters;
+    discussion.votes = votes;
+
     return res.send(discussion);
   } catch(err) {
       return res.status(500).json({
@@ -93,15 +107,40 @@ const upvote = async(req,res) => {
   }
 }
 
-const downvote = async(req,res) => {
-
+/** Downvotes a discussion, idempotent
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+const downvoteDiscussion = async(req,res) => {
   try {
     const discussion = await DiscussionModel.findById(req.params.id).exec();
     if (!discussion) return res.status(404).json({
         error: 'Not Found',
         message: `Discussion ${req.params.id} not found`
     });
-    await DiscussionModel.updateOne({_id:req.params.id}, {$inc: {votes : -1}} )
+
+    let upvoters = discussion.upvoters;
+    let downvoters = discussion.downvoters;
+
+    if(upvoters.includes(req.userId)) {
+      upvoters = upvoters.filter(userId => userId != req.userId)
+    }
+    if(!downvoters.includes(req.userId)) {
+      downvoters.push(req.userId);
+    }
+    const votes = upvoters.length - downvoters.length;
+
+    await DiscussionModel.updateOne({_id: req.params.id}, {$set: {
+      votes : votes,
+      upvoters: upvoters,
+      downvoters: downvoters 
+    }});
+
+    discussion.upvoters = upvoters;
+    discussion.downvoters = downvoters;
+    discussion.votes = votes;
+
     return res.send(discussion);
   } catch(err) {
       return res.status(500).json({
@@ -109,13 +148,58 @@ const downvote = async(req,res) => {
           message: err.message
       });
   }
+}
+
+const getDiscussionProfile = async (req,res) => {
+  try {
+    const discussions = await DiscussionModel.find({username: req.params.id}).exec();
+    
+    if (!discussions) return res.status(404).json({
+        error: 'Not Found',
+        message: `Discussions for User ${req.params.id} not found`
+    });
+
+    return res.send(discussions);
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
+
+/** Initializes both upvoters and downvoters fields
+ * 
+ * @param {*} discussion 
+ */
+const initializeVoting = async(discussion) => {
+  const upvoters = discussion.upvoters;
+    if(!upvoters) {
+      await discussion.updateOne({
+        _id: req.params.id
+      }, {
+        $set: { upvoters: [] }
+      }, {
+        upsert: true
+      }).exec();
+    }
+  const downvoters = discussion.downvoters;
+    if(!downvoters) {
+      await discussion.updateOne({
+        _id: req.params.id
+      }, {
+        $set: { upvoters: [] }
+      }, {
+        upsert: true
+      }).exec();
+    }
 }
 
 module.exports = {
     createDiscussion,
     getDiscussion,
     getAllDiscussions,
-    upvote,
-    downvote,
+    upvoteDiscussion,
+    downvoteDiscussion,
     getDiscussionProfile,
 };
