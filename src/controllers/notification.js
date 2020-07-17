@@ -42,16 +42,24 @@ const getNotifications = async (req,res) => {
     }
   }
 
-const getDiscussionProfile = async (req,res) => {
+const deleteNotification = async (req,res) => {
   try {
-    const discussions = await DiscussionModel.find({username: req.params.id}).exec();
-    
-    if (!discussions) return res.status(404).json({
+    const notification = await NotificationModel.findById(req.params.id).exec();
+    if(notification && req.userId != notification.userId) {
+      return res.status(404).json({
+        error: 'Not Authorized',
+        message: `Notification does not own ${req.params.id}`
+    });
+    }
+
+    await NotificationModel.findByIdAndDelete(req.params.id).exec();
+
+    if (!notification) return res.status(404).json({
         error: 'Not Found',
-        message: `Discussions for User ${req.params.id} not found`
+        message: `Notification for User ${req.params.id} not found`
     });
 
-    return res.send(discussions);
+    return res.send(notification);
   } catch(err) {
       return res.status(500).json({
           error: 'Internal Server Error',
@@ -116,5 +124,6 @@ const downvote = async(req,res) => {
 
 module.exports = {
     createNotification,
-    getNotifications
+    getNotifications,
+    deleteNotification
 };
