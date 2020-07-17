@@ -43,7 +43,7 @@ const getDiscussion = async (req,res) => {
       });
   }
 }
-const getDiscussionProfile = async (req,res) => {
+const getDiscussionProfile = async (req,res) => { // not needed anymore
   try {
     const discussions = await DiscussionModel.find({username: req.params.id}).exec();
     
@@ -67,7 +67,7 @@ const getDiscussionProfile = async (req,res) => {
  * @param {*} req 
  * @param {*} res 
  */
-const getAllDiscussions = async (req,res) => {
+const getAllDiscussions = async (req,res) => { 
   try {
     const discussions = await DiscussionModel.find().exec();
     return res.send(discussions);
