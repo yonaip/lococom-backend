@@ -7,4 +7,5 @@ const usercontroller = require('../controllers/user');
 router.get('/user/:id', usercontroller.getUser);
 router.get('/user/id/:id', usercontroller.getUserfromId);
 router.post('/user/friendlist/', usercontroller.addFriend);
+router.put('/user/removeFriend/', usercontroller.deleteFriend)
 module.exports = router;

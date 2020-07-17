@@ -58,9 +58,20 @@ const addFriend = async (req,res) => {
         res.status(400).send(`Could not add ${friend} due to ${err}`);
       }
 }
-
+const deleteFriend = async (req,res) => {
+    try {
+            console.log(req.body.friend)
+            const test = await UserModel.update({ username : req.body.username }, {$pull: {friendlist: req.body.friend }} )
+            res.send({test} );
+    
+    
+      } catch(err) {
+        res.status(400).send(`Could not add ${friend} due to ${err}`);
+      }
+}
 module.exports = {
    getUser,
    addFriend,
-   getUserfromId
+   getUserfromId,
+   deleteFriend
 };
