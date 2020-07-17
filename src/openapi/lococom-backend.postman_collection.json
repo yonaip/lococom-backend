@@ -69,7 +69,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"stefko1\",\r\n    \"password\": \"123\"\r\n}",
+					"raw": "{\r\n    \"username\":\"stefko12\",\r\n    \"password\": \"123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -101,7 +101,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMDFiNGNiNmM0NWEzMzM2NDVlMjUwOCIsInVzZXJuYW1lIjoic3RlZmtvIiwiaWF0IjoxNTk0NzI5MTA2LCJleHAiOjE1OTQ4MTU1MDZ9.Z71K8yUrq6V0VSqN9PedWrnz7l8XU3RmlCHjo8JUGpc",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
@@ -126,7 +126,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:4000/api/discussion/5f06d2f5302e550b64047561",
+					"raw": "http://localhost:4000/api/discussion/5f121e10d5c4b4187e8363ec",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -135,7 +135,7 @@
 					"path": [
 						"api",
 						"discussion",
-						"5f06d2f5302e550b64047561"
+						"5f121e10d5c4b4187e8363ec"
 					]
 				}
 			},
@@ -174,7 +174,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Esoteric places for relaxation\",\r\n    \"topic\": \"Outdoors\",\r\n    \"content\": \"These are my favorites places to relaxe\",\r\n    \"lat\": 48.260051,\r\n    \"lng\": 11.642533,\r\n    \"votes\": 0\r\n}",
+					"raw": "{\r\n    \"title\": \"Test\",\r\n    \"topic\": \"Outdoors\",\r\n    \"content\": \"These are my favorites places to relaxe\",\r\n    \"lat\": 48.260051,\r\n    \"lng\": 11.642533,\r\n    \"votes\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -243,7 +243,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:4000/api/discussion/5f0ee0137f8b971f26740ecb/upvote",
+					"raw": "http://localhost:4000/api/discussion/5f1043f871445b10d7988b02/upvote",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -252,7 +252,7 @@
 					"path": [
 						"api",
 						"discussion",
-						"5f0ee0137f8b971f26740ecb",
+						"5f1043f871445b10d7988b02",
 						"upvote"
 					]
 				}
@@ -266,12 +266,12 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer Bearer {{token}}",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
 				"url": {
-					"raw": "http://localhost:4000/api/discussion/5f0ee0137f8b971f26740ecb/downvote",
+					"raw": "http://localhost:4000/api/discussion/5f1043f871445b10d7988b02/downvote",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -280,7 +280,7 @@
 					"path": [
 						"api",
 						"discussion",
-						"5f0ee0137f8b971f26740ecb",
+						"5f1043f871445b10d7988b02",
 						"downvote"
 					]
 				}
@@ -291,9 +291,24 @@
 			"name": "Get Notifications",
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:4000/api/notification",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"notification"
+					]
 				}
 			},
 			"response": []
@@ -301,10 +316,26 @@
 		{
 			"name": "Delete Notification",
 			"request": {
-				"method": "GET",
-				"header": [],
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:4000/api/notification/5f122055e2e3a8192a4546f0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"notification",
+						"5f122055e2e3a8192a4546f0"
+					]
 				}
 			},
 			"response": []
@@ -315,7 +346,17 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:4000/api/comment/5f107b7eac00571098e2348e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"comment",
+						"5f107b7eac00571098e2348e"
+					]
 				}
 			},
 			"response": []
