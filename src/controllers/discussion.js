@@ -31,7 +31,7 @@ const getDiscussion = async (req,res) => {
 const getAllDiscussions = async (req,res) => {
   try {
       if(req.query.topic) {
-          const discussions = await DiscussionModel.find({topic: req.query.topic}).exec();
+          const discussions = await DiscussionModel.find({topic: {$in: req.query.topic.split(',')}}).exec();
           return res.send(discussions);
       }
       else {
