@@ -4,18 +4,35 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const config = require('../config');
+
 const CommentModel = require('../models/comment');
+const DiscussionModel = require('../models/discussion');
+const UserModel = require('../models/user');
+
+const NotificationController = require('./notification');
 
 const createComment = async (req,res) => {
-  var newComment = new CommentModel(req.body);
-  newComment.save()
-    .then(item => {
-      res.send(item);
-    })
-    .catch(err => {
-      res.status(400).send(`Could not create ${newComment} due to ${err}`);
-    });
- }
+  try {
+    const {creatorId, title} = await DiscussionModel.findById(req.body.discussionId);
+
+    const newComment = await new CommentModel({
+      username: req.body.username,
+      userId: req.userId,
+      content: req.body.content,
+      votes: req.body.votes,
+      discussionId: req.body.discussionId
+    }).save();
+
+    // if user is different from creator of discussion send notification
+    if(req.userId != creatorId) {
+      NotificationController.createNotification(creatorId, "comm_create", `"${req.body.username}" commented on ${title}!`);
+    }
+
+    res.send(newComment);
+  } catch(err) {
+    res.status(500).send(`Could not create comment due to ${err}`);
+  }
+}
 
 const getComments = async (req,res) => {
  try {
