@@ -153,24 +153,6 @@ const getDiscussionProfile = async (req,res) => { // not needed anymore
   }
 }
 
-/** Gets all discussion
- *  TODO: refactor to use query parameters to limit search radius
- *  important for very big collections
- * @param {*} req 
- * @param {*} res 
- */
-const getAllDiscussions = async (req,res) => { 
-  try {
-    const discussions = await DiscussionModel.find().exec();
-    return res.send(discussions);
-  } catch(err) {
-      return res.status(500).json({
-          error: 'Internal Server Error',
-          message: err.message
-      });
-  }
-}
-
 const upvote = async(req,res) => {
 
   try {
@@ -220,24 +202,6 @@ const downvote = async(req,res) => {
     discussion.votes = votes;
 
     return res.send(discussion);
-  } catch(err) {
-      return res.status(500).json({
-          error: 'Internal Server Error',
-          message: err.message
-      });
-  }
-}
-
-const getDiscussionProfile = async (req,res) => {
-  try {
-    const discussions = await DiscussionModel.find({username: req.params.id}).exec();
-    
-    if (!discussions) return res.status(404).json({
-        error: 'Not Found',
-        message: `Discussions for User ${req.params.id} not found`
-    });
-
-    return res.send(discussions);
   } catch(err) {
       return res.status(500).json({
           error: 'Internal Server Error',
