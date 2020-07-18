@@ -7,13 +7,13 @@ const config = require('../config');
 
 const CommentModel = require('../models/comment');
 const DiscussionModel = require('../models/discussion');
-const UserModel = require('../models/user');
 
 const NotificationController = require('./notification');
+const cookieParser = require('cookie-parser');
 
-const createComment = async (req,res) => {
+const createComment = async (req, res) => {
   try {
-    const {creatorId, title} = await DiscussionModel.findById(req.body.discussionId);
+    const { creatorId, title } = await DiscussionModel.findById(req.body.discussionId);
 
     const newComment = await new CommentModel({
       username: req.body.username,
@@ -24,92 +24,111 @@ const createComment = async (req,res) => {
     }).save();
 
     // if user is different from creator of discussion send notification
-    if(req.userId != creatorId) {
+    if (req.userId != creatorId) {
       NotificationController.createNotification(creatorId, "comm_create", `"${req.body.username}" commented on ${title}!`);
     }
 
     res.send(newComment);
-  } catch(err) {
+  } catch (err) {
     res.status(500).send(`Could not create comment due to ${err}`);
   }
 }
 
-const getComments = async (req,res) => {
- try {
-    const comments = await CommentModel.find({discussionId: req.params.id}).exec();
+const getComments = async (req, res) => {
+  try {
+    const comments = await CommentModel.find({ discussionId: req.params.id }).exec();
     if (!comments) return res.status(404).json({
-        error: 'Not Found',
-        message: `Comments ${req.params.id} not found`
+      error: 'Not Found',
+      message: `Comments ${req.params.id} not found`
     });
 
     return res.send(comments);
-  } catch(err) {
-      return res.status(500).json({
-          error: 'Internal Server Error',
-          message: err.message
-      });
+  } catch (err) {
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: err.message
+    });
   }
- 
+
 }
-    
-const upvote = async(req,res) => {
+
+const upvote = async (req, res) => {
 
   try {
     const comment = await CommentModel.findById(req.params.id).exec();
     if (!comment) return res.status(404).json({
-        error: 'Not Found',
-        message: `Discussion ${req.params.id} not found`
+      error: 'Not Found',
+      message: `Discussion ${req.params.id} not found`
     });
-    await CommentModel.updateOne({_id:req.params.id}, {$inc: {votes : 1}} )
+    await CommentModel.updateOne({ _id: req.params.id }, { $inc: { votes: 1 } })
     return res.send(comment);
-  } catch(err) {
-      return res.status(500).json({
-          error: 'Internal Server Error',
-          message: err.message
-      });
+  } catch (err) {
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: err.message
+    });
   }
 }
 
-const downvote = async(req,res) => {
+const downvote = async (req, res) => {
 
   try {
     const comment = await CommentModel.findById(req.params.id).exec();
     if (!comment) return res.status(404).json({
-        error: 'Not Found',
-        message: `Discussion ${req.params.id} not found`
+      error: 'Not Found',
+      message: `Discussion ${req.params.id} not found`
     });
-    await CommentModel.updateOne({_id:req.params.id}, {$inc: {votes : -1}} )
+    await CommentModel.updateOne({ _id: req.params.id }, { $inc: { votes: -1 } })
     return res.send(comment);
-  } catch(err) {
-      return res.status(500).json({
-          error: 'Internal Server Error',
-          message: err.message
-      });
+  } catch (err) {
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: err.message
+    });
   }
 }
- 
-const getCommentProfile = async (req,res) => {
+
+const CommentProfile = async (req, res) => {
   try {
-    const comments = await CommentModel.find({username: req.params.id}).exec();
-    
+    const comments = await CommentModel.find({ username: req.params.id }).exec();
+
     if (!comments) return res.status(404).json({
-        error: 'Not Found',
-        message: `Comments for User ${req.params.id} not found`
+      error: 'Not Found',
+      message: `Comments for User ${req.params.id} not found`
     });
 
     return res.send(comments);
-  } catch(err) {
-      return res.status(500).json({
-          error: 'Internal Server Error',
-          message: err.message
-      });
+  } catch (err) {
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: err.message
+    });
   }
 }
 
-module.exports = {
+const deleteComment = async (req, res) => {
+  try {
+    const comment = await CommentModel.findOne({ _id: req.params.id }).exec(); 
+    if (!comment) return res.status(404).json({
+      error: 'Not Found',
+      message: `Comment ${req.params.id} not found`
+    });
+    await CommentModel.deleteOne({_id : req.params.id})
+      res.send(comment)
+
+  } catch (err) {
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: err.message
+    });
+
+  }}
+
+  module.exports = {
     createComment,
     getComments,
     upvote,
     downvote,
-    getCommentProfile
-};
+    CommentProfile,
+    deleteComment
+  };

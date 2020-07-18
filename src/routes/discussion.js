@@ -8,6 +8,7 @@ const middlewares = require('../middlewares');
 router.get('/discussion', discussionController.getAllDiscussions);
 router.get('/discussion/:id', discussionController.getDiscussion);
 router.post('/discussion', middlewares.checkAuthentication, discussionController.createDiscussion);
+router.delete('/discussion/:id', middlewares.checkAuthentication, discussionController.deleteDiscussion);
 // TODO: router.delete(...)
 
 // Voting routes
