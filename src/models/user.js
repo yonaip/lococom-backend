@@ -15,7 +15,8 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String
     },
-    discussions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }]
+    discussions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }],
+    friendlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 UserSchema.set('versionKey', false);
