@@ -30,8 +30,14 @@ const getDiscussion = async (req,res) => {
  */
 const getAllDiscussions = async (req,res) => {
   try {
-    const discussions = await DiscussionModel.find().exec();
-    return res.send(discussions);
+      if(req.query.topic) {
+          const discussions = await DiscussionModel.find({topic: req.query.topic}).exec();
+          return res.send(discussions);
+      }
+      else {
+          const discussions = await DiscussionModel.find().exec();
+          return res.send(discussions);
+      }
   } catch(err) {
       return res.status(500).json({
           error: 'Internal Server Error',
