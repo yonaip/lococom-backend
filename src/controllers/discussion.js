@@ -42,7 +42,8 @@ const getDiscussion = async (req,res) => {
           message: err.message
       });
   }
-}
+};
+
 const getDiscussionProfile = async (req,res) => {
   try {
     const discussions = await DiscussionModel.find({username: req.params.id}).exec();
@@ -69,15 +70,22 @@ const getDiscussionProfile = async (req,res) => {
  */
 const getAllDiscussions = async (req,res) => {
   try {
-    const discussions = await DiscussionModel.find().exec();
-    return res.send(discussions);
+      console.log(req.query.topic);
+      if(req.query.topic) {
+          const discussions = await DiscussionModel.find({topic: req.query.topic}).exec();
+          return res.send(discussions);
+      }
+      else {
+          const discussions = await DiscussionModel.find().exec();
+          return res.send(discussions);
+      }
   } catch(err) {
       return res.status(500).json({
           error: 'Internal Server Error',
           message: err.message
       });
   }
-}
+};
 
 const upvote = async(req,res) => {
 
