@@ -30,7 +30,12 @@ const DiscussionSchema = new mongoose.Schema({
         type: Number,
         required:true,
     },
-    comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}],
+    timestamp: {
+        type: String,
+        required:true,
+    },
+
+    comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}], //can be deleted
     upvoters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     downvoters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });

@@ -4,6 +4,8 @@ const DiscussionModel = require('../models/discussion');
 const UserModel = require("../models/user");
 const NotificationController = require('./notification');
 
+// gets a Discussion Object from an ID
+
 const getDiscussion = async (req, res) => {
   try {
     const discussion = await DiscussionModel.findById(req.params.id).exec();
@@ -137,23 +139,6 @@ const downvoteDiscussion = async (req, res) => {
     });
   }
 }
-const getDiscussionProfile = async (req, res) => { // not needed anymore
-  try {
-    const discussions = await DiscussionModel.find({ username: req.params.id }).exec();
-
-    if (!discussions) return res.status(404).json({
-      error: 'Not Found',
-      message: `Discussions for User ${req.params.id} not found`
-    });
-
-    return res.send(discussions);
-  } catch (err) {
-    return res.status(500).json({
-      error: 'Internal Server Error',
-      message: err.message
-    });
-  }
-}
 
 const upvote = async (req, res) => {
 
@@ -240,7 +225,7 @@ const initializeVoting = async (discussion) => {
     }).exec();
   }
 }
-
+// deletes a Discussion
 const deleteDiscussion = async (req, res) => {
   try {
     const discussion = await DiscussionModel.findById(req.params.id).exec();
@@ -260,25 +245,6 @@ const deleteDiscussion = async (req, res) => {
   }
 }
 
-const deleteComment = async (req, res) => {
-  try {
-    const comment = await CommentModel.findOne({ _id: req.params.id }).exec();
-    if (!comment) return res.status(404).json({
-      error: 'Not Found',
-      message: `Comment ${req.params.id} not found`
-    });
-    await CommentModel.deleteOne({ _id: req.params.id })
-    res.send(comment)
-
-  } catch (err) {
-    return res.status(500).json({
-      error: 'Internal Server Error',
-      message: err.message
-    });
-
-  }
-}
-
 
 module.exports = {
   createDiscussion,
@@ -286,6 +252,5 @@ module.exports = {
   getAllDiscussions,
   upvoteDiscussion,
   downvoteDiscussion,
-  getDiscussionProfile,
   deleteDiscussion
 };

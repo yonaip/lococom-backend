@@ -11,6 +11,8 @@ const DiscussionModel = require('../models/discussion');
 const NotificationController = require('./notification');
 const cookieParser = require('cookie-parser');
 
+
+// creates a new Comment in the database
 const createComment = async (req, res) => {
   try {
     const { creatorId, title } = await DiscussionModel.findById(req.body.discussionId);
@@ -20,7 +22,8 @@ const createComment = async (req, res) => {
       userId: req.userId,
       content: req.body.content,
       votes: req.body.votes,
-      discussionId: req.body.discussionId
+      discussionId: req.body.discussionId,
+      timestamp : req.body.timestamp
     }).save();
 
     // if user is different from creator of discussion send notification
@@ -34,6 +37,8 @@ const createComment = async (req, res) => {
   }
 }
 
+
+// gets all Comments from a discussion
 const getComments = async (req, res) => {
   try {
     const comments = await CommentModel.find({ discussionId: req.params.id }).exec();
@@ -88,6 +93,7 @@ const downvote = async (req, res) => {
   }
 }
 
+// gets all Comments from a User
 const CommentProfile = async (req, res) => {
   try {
     const comments = await CommentModel.find({ username: req.params.id }).exec();
@@ -106,6 +112,8 @@ const CommentProfile = async (req, res) => {
   }
 }
 
+
+// deletes a Comment
 const deleteComment = async (req, res) => {
   try {
     const comment = await CommentModel.findOne({ _id: req.params.id }).exec(); 

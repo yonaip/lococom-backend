@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 const config = require('../config');
 const UserModel = require('../models/user');
 
-
+//gets a Userobject from a Username
 const getUser = async (req,res) => {
  try {
     const user = await UserModel.findOne({username: req.params.id}).exec();
@@ -24,6 +24,7 @@ const getUser = async (req,res) => {
   }
  
 }
+//gets a Userobject from an ID
 const getUserfromId = async (req,res) => {
     try {
         const user = await UserModel.findOne({_id: req.params.id}).exec();
@@ -40,7 +41,7 @@ const getUserfromId = async (req,res) => {
           });
       }
 }
-
+//adds Friend to User
 const addFriend = async (req,res) => {
     try {
         const friend = await UserModel.findOne({username: req.body.friendname}).exec();
@@ -58,6 +59,8 @@ const addFriend = async (req,res) => {
         res.status(400).send(`Could not add ${friend} due to ${err}`);
       }
 }
+
+// deletes Friend from User
 const deleteFriend = async (req,res) => {
     try {
             console.log(req.body.friend)

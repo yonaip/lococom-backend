@@ -24,6 +24,10 @@ const CommentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    timestamp: {
+        type: String,
+        required: true,
+    },
 });
 
 CommentSchema.set('versionKey', false);
