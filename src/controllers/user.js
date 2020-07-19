@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 
 const config = require('../config');
 const UserModel = require('../models/user');
+const ChatController = require('../controllers/chat');
 
 //gets a Userobject from a Username
 const getUser = async (req,res) => {

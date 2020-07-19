@@ -23,8 +23,7 @@ const CommentSchema = new mongoose.Schema({
         type: String,
     },
     timestamp: {
-        type: String,
-        required: true,
+        type: String
     },
 });
 

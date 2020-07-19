@@ -32,7 +32,6 @@ const DiscussionSchema = new mongoose.Schema({
     },
     timestamp: {
         type: String,
-        required:true,
     },
 
     comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}], //can be deleted
