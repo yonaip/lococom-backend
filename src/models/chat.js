@@ -10,4 +10,4 @@ const ChatSchema = new mongoose.Schema({
 ChatSchema.set('versionKey', false);
 
 // Export use model
-module.exports = mongoose.model('Discussion', ChatSchema);
+module.exports = mongoose.model('Chat', ChatSchema);

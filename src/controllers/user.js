@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const config = require('../config');
 const UserModel = require('../models/user');
 
+const ChatController = require('./chat');
 
 const getUser = async (req, res) => {
     try {
@@ -59,6 +60,9 @@ const addFriend = async (req, res) => {
             await UserModel.findByIdAndUpdate(targetUser._id, { $push: { friendlist: currentUser._id } }).exec()
         ];
 
+        // Create their chat
+        await ChatController.createChat(currentUser._id, targetUser._id);
+
         res.send(response);
 
     } catch (err) {
@@ -82,6 +86,9 @@ const deleteFriend = async (req, res) => {
             await UserModel.findByIdAndUpdate(currentUser._id, { $pull: { friendlist: targetUser._id } }).exec(),
             await UserModel.findByIdAndUpdate(targetUser._id, { $pull: { friendlist: currentUser._id } }).exec()
         ];
+
+        // Remove their chat
+        await ChatController.removeChat(currentUser._id, targetUser._id);
 
         res.send(response);
 

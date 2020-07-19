@@ -12,6 +12,7 @@ const comment = require('./routes/comment');
 const friendlist = require('./routes/friendlist');
 const user = require('./routes/user');
 const notification = require('./routes/notification');
+const chat = require('./routes/chat');
 const app = express()
 
 
@@ -35,4 +36,5 @@ app.use('/api', comment);
 app.use('/api', friendlist);
 app.use('/api', user);
 app.use('/api', notification)
+app.use('/api', chat);
 module.exports = app;
