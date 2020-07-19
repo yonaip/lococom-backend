@@ -22,6 +22,9 @@ const CommentSchema = new mongoose.Schema({
     discussionId: {
         type: String,
     },
+    timestamp: {
+        type: String
+    },
 });
 
 CommentSchema.set('versionKey', false);

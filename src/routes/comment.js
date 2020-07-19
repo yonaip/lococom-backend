@@ -9,6 +9,6 @@ router.get('/comment/:id', commentController.getComments);
 router.post('/comment', middlewares.checkAuthentication, commentController.createComment);
 // router.put('/comment/upvote/:id', commentController.upvote);
 // router.put('/comment/downvote/:id', commentController.downvote);
-router.get('/comment/commentProfile/:id', commentController.getCommentProfile);
-
+router.get('/comment/CommentProfile/:id', commentController.CommentProfile);
+router.delete('/comment/:id', middlewares.checkAuthentication, commentController.deleteComment);
 module.exports = router;
