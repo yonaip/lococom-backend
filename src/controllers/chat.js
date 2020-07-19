@@ -25,7 +25,7 @@ const createChat = async (userId1, userId2) => {
 
 const removeChat = async (userId1, userId2) => {
     try {
-        const oldChat = await ChatModel.findOneAndRemove({ participants: { $in: [userId1, userId2] } }).exec();
+        const oldChat = await ChatModel.findOneAndRemove({ participants: { $all: [userId1, userId2] } }).exec();
     } catch (err) {
         console.log(`Could not create chat due to ${err}`);
     }
@@ -34,7 +34,7 @@ const removeChat = async (userId1, userId2) => {
 const getChat = async (req, res) => {
     try {
         const otherUser = await UserModel.findOne({username: req.params.id }).exec();
-        const chat = await ChatModel.findOne({ participants: { $in: [req.userId, otherUser._id] } });
+        const chat = await ChatModel.findOne({ participants: { $all: [req.userId, otherUser._id] } });
         
         res.send(chat);
     } catch (err) {
@@ -45,7 +45,7 @@ const getChat = async (req, res) => {
 const getChatComments = async (req, res) => {
     try {
         const otherUser = await UserModel.findOne({username: req.params.id }).exec();
-        let {comments} = await ChatModel.findOne({ participants: { $in: [req.userId, otherUser._id] } });
+        let {comments} = await ChatModel.findOne({ participants: { $all: [req.userId, otherUser._id] } });
         
         const result = [];
         for(const id of comments) {
@@ -61,7 +61,7 @@ const getChatComments = async (req, res) => {
 const postChatComment = async (req, res) => {
     try {
         const otherUser = await UserModel.findOne({username: req.params.id }).exec();
-        let chat = await ChatModel.findOne({ participants: { $in: [req.userId, otherUser._id] } });
+        let chat = await ChatModel.findOne({ participants: { $all: [req.userId, otherUser._id] } });
         
         req.body.userId = req.userId;
         const comment = await new CommentModel(req.body).save();
