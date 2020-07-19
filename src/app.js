@@ -11,6 +11,7 @@ const discussion = require('./routes/discussion');
 const comment = require('./routes/comment');
 const user = require('./routes/user');
 const notification = require('./routes/notification');
+const chat = require('./routes/chat');
 const app = express()
 
 
@@ -33,4 +34,5 @@ app.use('/api', discussion);
 app.use('/api', comment);
 app.use('/api', user);
 app.use('/api', notification)
+app.use('/api', chat);
 module.exports = app;

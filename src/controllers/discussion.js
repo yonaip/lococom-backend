@@ -32,13 +32,19 @@ const getDiscussion = async (req, res) => {
  */
 const getAllDiscussions = async (req, res) => {
   try {
-    const discussions = await DiscussionModel.find().exec();
-    return res.send(discussions);
-  } catch (err) {
-    return res.status(500).json({
-      error: 'Internal Server Error',
-      message: err.message
-    });
+      if(req.query.topic) {
+          const discussions = await DiscussionModel.find({topic: {$in: req.query.topic.split(',')}}).exec();
+          return res.send(discussions);
+      }
+      else {
+          const discussions = await DiscussionModel.find().exec();
+          return res.send(discussions);
+      }
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
   }
 }
 
@@ -162,6 +168,60 @@ const downvote = async (req, res) => {
 
   try {
     const discussion = await DiscussionModel.findById(req.params.id).exec();
+    
+    if (!discussion) return res.status(404).json({
+        error: 'Not Found',
+        message: `Discussion ${req.params.id} not found`
+    });
+
+    return res.send(discussion);
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
+const getDiscussionProfile = async (req,res) => { // not needed anymore
+  try {
+    const discussions = await DiscussionModel.find({username: req.params.id}).exec();
+    
+    if (!discussions) return res.status(404).json({
+        error: 'Not Found',
+        message: `Discussions for User ${req.params.id} not found`
+    });
+
+    return res.send(discussions);
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
+
+const upvote = async(req,res) => {
+
+  try {
+    const discussion = await DiscussionModel.findById(req.params.id).exec();
+    if (!discussion) return res.status(404).json({
+        error: 'Not Found',
+        message: `Discussion ${req.params.id} not found`
+    });
+    await DiscussionModel.updateOne({_id:req.params.id}, {$inc: {votes : 1}} )
+    return res.send(discussion);
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
+  }
+}
+
+const downvote = async(req,res) => {
+
+  try {
+    const discussion = await DiscussionModel.findById(req.params.id).exec();
     if (!discussion) return res.status(404).json({
       error: 'Not Found',
       message: `Discussion ${req.params.id} not found`
@@ -191,11 +251,11 @@ const downvote = async (req, res) => {
     discussion.votes = votes;
 
     return res.send(discussion);
-  } catch (err) {
-    return res.status(500).json({
-      error: 'Internal Server Error',
-      message: err.message
-    });
+  } catch(err) {
+      return res.status(500).json({
+          error: 'Internal Server Error',
+          message: err.message
+      });
   }
 }
 

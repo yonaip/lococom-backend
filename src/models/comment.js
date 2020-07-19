@@ -18,11 +18,9 @@ const CommentSchema = new mongoose.Schema({
     },
     votes: {
         type: Number,
-        required: true,
     },
     discussionId: {
         type: String,
-        required: true,
     },
     timestamp: {
         type: String,
